@@ -44,11 +44,11 @@ Example FATMKDIR.G4B (hd0,0)/Program\ Files /lfn
 Example FATMKDIR.G4B (hd0,0)/Programs /lfn:case /q
 Example FATMKDIR.G4B (hd0,0)/Progra~1 /lfn:@</code></pre>
 
-###HISTORY
+### HISTORY
 
 Version 0.1
 First published version
 
-###SCREENSHOTS
+### SCREENSHOTS
 
 
