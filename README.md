@@ -57,7 +57,7 @@ First published version
 
 ### SCREENSHOTS
 
-Basic functions compared with function 'mkdir' of grubutil FAT: making more than one directory at once and making a Long File Name with switch /lfn
+Basic functions compared with function 'mkdir' of grubutil FAT: making more than one directory at once and making a Long File Name with switch /lfn. Switch /t for testing first (no '>')
 
 ![FAT mkdir compared with FATMKDIR G4B making more than one directory at once and Long File Name with -l I](https://github.com/user-attachments/assets/95adec4e-57ac-4ee9-b0d5-3b69e4b80de0)
 
