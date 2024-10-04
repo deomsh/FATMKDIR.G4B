@@ -1,4 +1,4 @@
-## FATMKDIR.G4B v0.1 (20241002)
+## FATMKDIR.G4B v0.1 (20241004)
 
 <pre><code>echo Function: front-end for Grubutil 'FAT', function 'mkdir'
 FATMKDIR.G4B [--mdbase=sector] [DEVICE][/]PATH[/] switches
@@ -51,4 +51,11 @@ First published version
 
 ### SCREENSHOTS
 
+Basic functions compared with function 'mkdir' of grubutil FAT: making more than one directory at once and making a Long File Name with switch /lfn
+
+![FAT mkdir comaperd with FATMKDIR G4B making more than one directory at once and Long File Name with -l I](https://github.com/user-attachments/assets/bf7129ae-5d65-4cb0-bf96-fd4573c2dbf6)
+
+FATMKDIR.G4B making case in Short File Names as Long File Name with switch /lfn:case
+
+![FATMKDIR G4B making Long File Name as case of Short File Names with -lfn=case II](https://github.com/user-attachments/assets/7cf8865e-b556-4bbc-9b69-2ff5870967b4)
 
