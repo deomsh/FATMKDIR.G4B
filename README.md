@@ -44,6 +44,12 @@ Example FATMKDIR.G4B (hd0,0)/Program\ Files /lfn
 Example FATMKDIR.G4B (hd0,0)/Programs /lfn:case /q
 Example FATMKDIR.G4B (hd0,0)/Progra~1 /lfn:@</code></pre>
 
+### ATTRIBFT.LLL
+
+Concept of 'Loosely Linked Library' is courtesy of Wonko the Sane (Jaclaz)  
+More information and download:
+https://github.com/deomsh/ATTRIBFT.LLL
+
 ### HISTORY
 
 Version 0.1  
