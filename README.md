@@ -59,3 +59,6 @@ FATMKDIR.G4B making case in Short File Names as Long File Name with switch /lfn:
 
 ![FATMKDIR G4B making Long File Name as case of Short File Names with -lfn=case II](https://github.com/user-attachments/assets/7cf8865e-b556-4bbc-9b69-2ff5870967b4)
 
+Special Feature: with switch /sfn@ make Short File Name directories from Long File Names and store LFN's as external attribute in xxxxxx#1 files. FATLSDIR.G4B reads tem out with swithches /sfn@ and /s
+
+![FATMKDIR make SFN directories from LFN's and LFN's stored in #-files with switch -sfn@ and FATLSDIR -sfn@ -s shows them II](https://github.com/user-attachments/assets/9c5e4c45-3101-4ef9-8509-831b296e08da)
