@@ -1,6 +1,6 @@
 ## FATMKDIR.G4B v0.1 (20241004)
 
-<pre><code>echo Function: front-end for Grubutil 'FAT', function 'mkdir'
+<pre><code>Function: front-end for Grubutil 'FAT', function 'mkdir'
 FATMKDIR.G4B [--mdbase=sector] [DEVICE][/]PATH[/] switches
 FATMKDIR.G4B /? (this text)
 Make full path on DEVICE - if DEVICE is omitted: on ROOT
