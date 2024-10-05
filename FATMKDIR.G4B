@@ -65,12 +65,12 @@ goto :exit
 :optargs
 if "%~1"=="" && set arg= && goto :eof
 set arg=%~1
-if not "%arg:~0,1%"=="/" && echo && echo Switch '%arg%' is not valid && call :help "smallhelp" && set result=0 && goto :eof
-if "%arg%"=="/" && echo && echo Switch '%arg%' is not valid && call :help "smallhelp" && set result=0 && goto :eof
+if not "%arg:~0,1%"=="/" && echo && echo Switch '%arg%' is not valid && echo && call :help "smallhelp" && set result=0 && goto :eof
+if "%arg%"=="/" && echo && echo Switch '%arg%' is not valid && echo && call :help "smallhelp" && set result=0 && goto :eof
 set "arg=%arg:~1%"
 echo -n > (md)%mdmem%+1
 pause --wait=0 %arg% > (md)%mdmem%+1
-cat --locate=/ (md)%mdmem%+1 > nul && echo && echo Switch '/%arg%' is not valid && call :help "smallhelp" && set result=0 && goto :eof
+cat --locate=/ (md)%mdmem%+1 > nul && echo && echo Switch '/%arg%' is not valid && echo && call :help "smallhelp" && set result=0 && goto :eof
 if not exist t && if /i %arg%==t && set /l "t=/t" && shift && goto :optargs
 if not exist q && if /i %arg%==q && set /l "q=/q" && shift && goto :optargs
 if not exist SFN && if /i %arg%==sfn && set "SFN=/SFN" && shift && goto :optargs
@@ -80,8 +80,8 @@ if not exist LFN && if /i %arg%==lfn && set "LFN=/LFN" && set SFN=/SFN && shift 
 if not exist LFN && if /i %arg%==lfn:case && set "LFN=/LFN:case" && set SFN=/SFN && shift && goto :optargs
 if not exist LFN && if /i %arg%==lfn:@ && set "LFN=/LFN:@" && shift && goto :optargs
 if not exist LFN && if /i %arg%==lfn@ && set "LFN=/LFN:@" && shift && goto :optargs
-if not "%~4"=="" && echo && echo Switches '%~4', '%~3', '%~2' and '%~1' are together not valid ! if not "%~3"=="" && echo && echo Switches '%~3', '%~2' and '%~1' are together not valid ! if not "%~2"=="" && echo && echo Switches '%~2' and '%~1' are together not valid ! if not "%~1"=="" && echo && echo Switch '%~1' is not valid &; call :help "smallhelp" && set result=0 && goto :eof
-echo && echo Unspecified error on command-line && set result=0 && goto :eof
+if not "%~4"=="" && echo && echo Switches '%~4', '%~3', '%~2' and '%~1' are together not valid ! if not "%~3"=="" && echo && echo Switches '%~3', '%~2' and '%~1' are together not valid ! if not "%~2"=="" && echo && echo Switches '%~2' and '%~1' are together not valid ! if not "%~1"=="" && echo && echo Switch '%~1' is not valid &; echo && call :help "smallhelp" && set result=0 && goto :eof
+echo && echo Unspecified error on command-line && set result=0 && echo && goto :eof
 ::
 :parsetd
 if "%~1"=="" && goto :eof
