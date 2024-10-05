@@ -1,5 +1,5 @@
 !BAT
-#-#+ FATMKDIR.G4B v0.1 (20241004), by deomsh. (Original creation)
+#-#+ FATMKDIR.G4B v0.1 (20241005), by deomsh. (Original creation)
 if /i "%~1"=="" && call :help "smallhelp" && goto :eof
 setlocal && set *
 ## Save debug/ pager/ errorcheck status
@@ -322,6 +322,7 @@ cat %device%%%path%%%hashname%%%ext% | set lfndir=
 if exist lfndir && set lfndir=%lfndir% &; set /a lfnlen=%@retval% > nul
 if not %lfnlen%<=256 && set lfndir= && goto :eof
 if not %lfnlen%==%filelen% && set lfndir= && goto :eof
+if not /i "%name:~0,2%"=="%lfndir:~0,2%" && set lfndir=
 goto :eof
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # END OF SUB-ROUTINES
@@ -340,7 +341,7 @@ if "%~1"=="smallhelp" && echo Example FATMKDIR.G4B "(hd0,0)/Program Files" /lfn 
 if "%~1"=="smallhelp" && echo Example FATMKDIR.G4B "(hd0,0)/Program Files" /lfn
 if "%~1"=="smallhelp" && echo Example FATMKDIR.G4B (hd0,0)/Program\ Files /lfn
 clear ;; pager on
-echo FATMKDIR.G4B v0.1 (20241004), by deomsh. (Original creation)
+echo FATMKDIR.G4B v0.1 (20241005), by deomsh. (Original creation)
 echo Function: front-end for Grubutil 'FAT', function 'mkdir'
 echo FATMKDIR.G4B [--mdbase=sector] [DEVICE][/]PATH[/] switches
 echo FATMKDIR.G4B /? (this screen)
