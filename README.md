@@ -1,4 +1,4 @@
-## FATMKDIR.G4B v0.1 (20241004)
+## FATMKDIR.G4B v0.1 (20241005)
 
 <pre><code>Function: front-end for Grubutil 'FAT', function 'mkdir'
 FATMKDIR.G4B [--mdbase=sector] [DEVICE][/]PATH[/] switches
