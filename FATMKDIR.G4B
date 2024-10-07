@@ -1,5 +1,5 @@
 !BAT
-#-#+ FATMKDIR.G4B v0.1 (20241005), by deomsh. (Original creation)
+#-#+ FATMKDIR.G4B v0.1 (20241007), by deomsh. (Original creation)
 if /i "%~1"=="" && call :help "smallhelp" && goto :eof
 setlocal && set *
 ## Save debug/ pager/ errorcheck status
@@ -33,6 +33,7 @@ shift
 call :optargs %* &; if %result%==0 && echo && goto :exit
 if exist LFN &; if not exist %batchsrc%ATTRIBFT.LLL && echo ATTRIBFT.LLL not found, mandatory with switch '/LFN' && set result=0 && goto :eov ! delmod -l ATTRIBFT.LLL > nul || insmod %batchsrc%ATTRIBFT.LLL > nul || echo insmod can not load %batchsrc%ATTRIBFT.LLL && set result=0 && goto :eof
 echo -e "%tdir%" | set tdir= &; set "tdir=%tdir:~1,-1%"
+#org#call Fn.11 "%tdir%" "\ " && echo -e "%tdir%" | set tdir= &; set "tdir=%tdir:~1,-1%"
 set "tdir=%tdir%" &; set /a pathlen=%@retval%+1 > nul &; if %pathlen%>=256 && echo Long File Name PATH is too long: length of LFN-PATH: %pathlen% chars && set result=0 && goto :exit
 echo -n > (md)%mdmem%+1 && echo -e "%tdir%" > (md)%mdmem%+1 && cat --skip=1 --locate=\x22\x0D\x0A --replace=\x0D\x0A\x00 --number=1 (md)%mdmem%+1 > nul
 cat --skip=1 --locate=/ --length=%pathlen% (md)%mdmem%+1 > nul &; set /a fwslash=%@retval% > nul &; if %fwslash%>=19 && echo PATH is too deep: %fwslash% directories && set result=0 && goto :exit ! set fwslash=
@@ -103,7 +104,9 @@ if not exist SFN && if %lfncatch%==1 && echo Abort: directory '%arg%' is a Long 
 if exist SFN && if not exist LFN && if %lfncatch%==1 && call Fn.11 "%~1" "~" && echo Abort: Directory '%~1' contains '~'. Use FATMKDIR.G4B /? for HELP %NULL% && set lfnoke=N && goto :eof
 if exist SFN && if not exist LFN && if %lfncatch%==1 && if %SFN%==/SFN:@ && call Fn.11 "%~1" "#" && echo Abort: Directory '%~1' contains '#'. Use FATMKDIR.G4B /? for HELP %NULL% && set lfnadd=N && goto :eof
 if exist LFN && setlocal && ATTRIBFT.LLL getsfn "%tdev%%%td%/%~1" &; if exist result && endlocal && set "lfndir=%~1" && set arg=%result% ! endlocal && if not %lfncatch%==1 && set /u arg=%arg%
+#org#if exist LFN && setlocal && ATTRIBFT.LLL getsfn "%tdev%%%td%/%~1" &; if exist result && endlocal && set "lfndir=%~1" && set arg=%result% ! endlocal
 if exist LFN && fat dir %tdev%%%td%/%arg% > nul && setlocal && ATTRIBFT.LLL getlfn "%tdev%%%td%/%arg%" &; if exist result && endlocal && set "lfndir=%result%" ! endlocal
+#org#if exist LFN && fat dir %tdev%%%td%/%arg% > nul && setlocal && ATTRIBFT.LLL getlfn "%tdev%%%td%/%arg%" &; if exist result && endlocal && set "lfndir=%result%" ! endlocal
 #BAD#if exist LFN && if exist lfndir && setlocal && ATTRIBFT.LLL getlfn input="%output%" "%tdev%%%td%/%arg%" &; if exist result && endlocal && set "lfndir=%result%" && set "output=%output%" ! endlocal && set "output=%output%"
 if exist SFN && if %lfncatch%==1 && if not exist lfndir && set gotomsg= && setlocal && call :lfn2sfn "%~1" &; endlocal && set sfndir=%sfndir% && set "lfile2=%lfile2%" && set "gotomsg=%gotomsg%" && set lfnoke=%lfnoke% &; if not exist gotomsg && set arg=%sfndir% && set "larg=%lfile2%" && set sfndir= && set lfile2= ! %gotomsg%
 ## Existence target directory as filename:
@@ -111,6 +114,8 @@ if exist %tdev%%%td%/%arg% &; if exist LFN && echo -e Abort: '%tdev%%%lfntd%/%~1
 if exist SFN && if %lfncatch%==1 && if %lfnoke%==N && echo -e Abort: Short File Name of '%tdev%%%td%/%~1' not available %NULL% && set result=0 && goto :eof
 ## Existence target directory:
 fat dir %tdev%%%td%/%arg% > nul &; if exist LFN && if exist lfndir && echo -e Directory exists: %tdev%%%lfntd%/%lfndir% %NULL% ! if exist LFN && echo -e Directory exists: %tdev%%%lfntd%/%arg% %NULL% ! echo Directory exists: %tdev%%%td%/%arg% %NULL% &; if %LFN%==/LFN:case && if not %lfncatch%==1 && goto :skiptd ! if exist LFN && goto :makelfndir ! goto :skiptd
+#org#fat dir %tdev%%%td%/%arg% > nul &; if exist LFN && if exist lfndir && echo -e Directory exists: %tdev%%%lfntd%/%lfndir% %NULL% ! if exist LFN && echo -e Directory exists: %tdev%%%lfntd%/%~1 %NULL% ! echo Directory exists: %tdev%%%td%/%arg% %NULL% &; if exist LFN && goto :makelfndir ! goto :skiptd
+#MAYBE#if exist LFN && echo %act%make target-directory %tdev%%%lfntd%/%arg% %NULL% ! echo %act%make target-directory %tdev%%%td%/%arg% %NULL%
 echo %act%make target-directory %tdev%%%td%/%arg% %NULL%
 ## Waitloop target directory
 set waittime=0
@@ -123,14 +128,16 @@ fat dir %tdev%%%td%/%arg% > nul || set /a waittime=%waittime%+1 > nul && goto :t
 :makelfndir
 if %LFN%==/LFN:case && if not %lfncatch%==1 && setlocal && set /u higharg=%~1 &; if %higharg%==%~1 && endlocal ! endlocal && set lfncatch=1
 if %LFN%==/LFN:@ && if not %lfncatch%==1 && if not exist lfndir &; setlocal && call Fn.11 "%~1" "~" && call :sfn@2lfn "%tdev%%%td%/%~1" &; if exist lfndir && endlocal && set "lfndir=%lfndir%" && set lfncatch=1 ! endlocal
+#notanymore#if exist LFN && if %lfncatch%==1 && if not exist lfndir && fat dir %tdev%%%td%/%~1 > nul && setlocal && ATTRIBFT.LLL getntcasebyte "%tdev%%%td%/%~1" &; if exist result && if %result%==0x0 && endlocal ! if exist result && if not %result%==0x0 && endlocal && set lfncatch= ! if exist message && echo $[0x00]"$[]%message%$[0x00]" && endlocal && set result=0 ! echo Can not make directory LFN '%~1' && endlocal && set result=0
 if exist LFN && if %lfncatch%==1 && if not exist lfndir && echo -e %act%make directory LFN: %~1 %NULL%
 if %LFN%==/LFN:@ && if %lfncatch%==1 && if exist lfndir && echo -e %act%make directory LFN: %lfndir% %NULL%
-if not %t%==/t &; if %LFN%==/LFN:@ && if %lfncatch%==1 && if exist lfndir && setlocal && ATTRIBFT.LLL makelfn "%tdev%%%td%/%lfndir%" "%~1" &; if exist result && endlocal ! if exist message && echo %message% && endlocal && set result=0 ! echo Can not make directory LFN '%~1' && endlocal && set result=0
-if not %t%==/t &; if exist LFN && if %lfncatch%==1 && if not exist lfndir && setlocal && ATTRIBFT.LLL makelfn "%tdev%%%td%/%~1" "%arg%" &; if exist result && endlocal ! if exist message && echo %message% && endlocal ! echo Can not make directory LFN '%~1' && endlocal
-#BAD#if not %t%==/t &; if exist LFN && if %lfncatch%==1 && if not exist lfndir && setlocal && ATTRIBFT.LLL makelfn input="%output%" "%tdev%%%td%/%~1" %arg% &; if exist result && endlocal ! if exist message && echo %message% ! echo Can not make directory LFN '%~1' && endlocal
+if not %t%==/t &; if %LFN%==/LFN:@ && if %lfncatch%==1 && if exist lfndir && setlocal && ATTRIBFT.LLL makelfn "%tdev%%%td%/%lfndir%" "%~1" &; if exist result && endlocal ! if exist message && echo $[0x00]"$[]%message%$[0x00]" && endlocal && set result=0 ! echo Can not make directory LFN '%~1' && endlocal && set result=0
+if not %t%==/t &; if exist LFN && if %lfncatch%==1 && if not exist lfndir && setlocal && ATTRIBFT.LLL makelfn "%tdev%%%td%/%~1" "%arg%" &; if exist result && endlocal ! if exist message && echo $[0x00]"$[]%message%$[0x00]" && endlocal ! echo Can not make directory LFN '%~1' && endlocal
+#BAD#if not %t%==/t &; if exist LFN && if %lfncatch%==1 && if not exist lfndir && setlocal && ATTRIBFT.LLL makelfn input="%output%" "%tdev%%%td%/%~1" %arg% &; if exist result && endlocal ! if exist message && echo $[0x00]"$[]%message%$[0x00]" ! echo Can not make directory LFN '%~1' && endlocal
 :skiptd
 if exist SFN && if %SFN%==/SFN:@ && if %lfncatch%==1 && if %lfnoke%==Y && if not %lfnadd%==Y && setlocal && call :lfnadd "%~1" &; endlocal && set lfnadd=%lfnadd% &; if %lfnadd%=N && set result=0 && goto :eof
 set td=%td%/%arg% && if exist LFN &; if %lfncatch%==1 && if not exist lfndir && set "lfntd=%lfntd%/%~1" ! if exist lfndir && set "lfntd=%lfntd%/%lfndir%" ! set "lfntd=%lfntd%/%arg%"
+#org#set td=%td%/%arg% && if exist LFN &; if %lfncatch%==1 && set "lfntd=%lfntd%/%~1" ! if exist lfndir && set "lfntd=%lfntd%/%lfndir%" ! set "lfntd=%lfntd%/%arg%"
 if exist SFN && if %lfnoke%==N && set result=0 && goto :eof
 shift
 goto :parsetd
@@ -319,7 +326,7 @@ fat dir %device%%%path%%%hashname%%%ext% > nul && goto :eof
 cat --length=0 %device%%%path%%%hashname%%%ext% > nul ;; set /a filelen=%@retval% > nul
 if not %filelen%>=%namelen% && goto :eof
 cat %device%%%path%%%hashname%%%ext% | set lfndir=
-if exist lfndir && set lfndir=%lfndir% &; set /a lfnlen=%@retval% > nul
+if exist lfndir && set "lfndir=%lfndir%" &; set /a lfnlen=%@retval% > nul
 if not %lfnlen%<=256 && set lfndir= && goto :eof
 if not %lfnlen%==%filelen% && set lfndir= && goto :eof
 if not /i "%name:~0,2%"=="%lfndir:~0,2%" && set lfndir=
@@ -341,7 +348,7 @@ if "%~1"=="smallhelp" && echo Example FATMKDIR.G4B "(hd0,0)/Program Files" /lfn 
 if "%~1"=="smallhelp" && echo Example FATMKDIR.G4B "(hd0,0)/Program Files" /lfn
 if "%~1"=="smallhelp" && echo Example FATMKDIR.G4B (hd0,0)/Program\ Files /lfn
 clear ;; pager on
-echo FATMKDIR.G4B v0.1 (20241005), by deomsh. (Original creation)
+echo FATMKDIR.G4B v0.1 (20241007), by deomsh. (Original creation)
 echo Function: front-end for Grubutil 'FAT', function 'mkdir'
 echo FATMKDIR.G4B [--mdbase=sector] [DEVICE][/]PATH[/] switches
 echo FATMKDIR.G4B /? (this screen)
