@@ -1,4 +1,4 @@
-## FATMKDIR.G4B v0.1 (20241007)
+## FATMKDIR.G4B v0.2 (20250726)
 
 <pre><code>Function: front-end for Grubutil 'FAT', function 'mkdir'
 FATMKDIR.G4B [--mdbase=sector] [DEVICE][/]PATH[/] switches
@@ -6,8 +6,7 @@ FATMKDIR.G4B /? (this text)
 Make full path on DEVICE - if DEVICE is omitted: on ROOT
 On hidden FAT partitions too!
 Default: short 8+3 directory names, Long File Names with library ATTRIBFT.LLL
---mdbase=sector: changes (md)startsector in use. Default: 0x3000 *
-* Except: 0x0-0x21F, 0x228-0x2FF, 0x30x-0x2FFF, 0x4000-0xD460, 0x12000-0x12FFF
+--mdbase=sector: changes (md)startsector in use. Default: 0x3000
 DEVICE = (fd#), (hd#,#), (0x#) and (#): on FAT devices only
 [/]PATH[/] = directories between '/' - first '/' and last '/' optional
 
@@ -26,7 +25,11 @@ Switches: /q /sfn[[:]@] /lfn[:case]|/lfn[:]@ /t
 
 Remarks:
 Order of switches and lowercase/ uppercase free ('/lfn[:case]' will make case)
+Switches are not case-sensitive
 Exports variable 'result=1' if success, 'result=0' if not (for use with '/q')
+Forbidden chars: * : ? " % | < > \\ \x01 \a \b \f \n \r \t \v and $[ with ]
+Forbidden filenames: space, '.' and starting with '.' (extension only) or '('
+mdbase except: 0x0-0x21F 0x228-0x2FF 0x30x-0x2FFF 0x4000-0xD460 0x12000-0x12FFF
 FAT needed, searched: %~dp0, ROOT, (bd) and /, /grub/, /grubutil/, /g4dll/
 File versions: Grubutil FAT 15/02/2015 and Grub4Dos 0.4.6a/ Grub4dos for UEFI
  Grub4dos for UEFI soon ' out of malloc memory' (last version 20240901)
@@ -42,20 +45,28 @@ Example FATMKDIR.G4B "(hd0,0)/Program Files" /lfn /t
 Example FATMKDIR.G4B "(hd0,0)/Program Files" /lfn
 Example FATMKDIR.G4B (hd0,0)/Program\ Files /lfn 
 Example FATMKDIR.G4B (hd0,0)/Programs /lfn:case /q
-Example FATMKDIR.G4B (hd0,0)/Progra~1 /lfn:@</code></pre>
+Example FATMKDIR.G4B (hd0,0)/Progra~1 /lfn:@
+Example FATMKDIR.G4B "(hd0,0)/if exist MORE && echo MORE ! echo .LESS" /LFN</code></pre>
 
 #### ATTRIBFT.LLL
 
 Concept of 'Loosely Linked Library' is an idea of Wonko the Sane (Jaclaz)  
-More information and download:
-https://github.com/deomsh/ATTRIBFT.LLL
+More information and download:  
+https://github.com/deomsh/ATTRIBFT.LLL  
 
 ### HISTORY
+Version 0.2  
+NEW: FAT (and ATTRIBFT.LLL if used) not unloaded afterwards if already loaded with insmod  
+NEW: make directories containing grub4dos-operators (except forbidden chars/ filename)  
+BETTER: check forbidden chars '|', '||'  '<' and '>' etcetera (see HELP)  
+BUGFIX: with /SFN:@ char '?' written to SFN~#-file instead '=' if LFN contains '='  
+BUGFIX: Long File Name-extension not always shortened to three chars while making Short File Name  
 
 Version 0.1  
-First published version
+First published version  
 
 ### SCREENSHOTS
+![TEXTSTAT G4B FATMKDIR G4B](https://github.com/user-attachments/assets/f6c54720-2c1a-4872-ad63-f8df9231ae11)
 
 Basic functions compared with function 'mkdir' of grubutil FAT: making more than one directory at once and making a Long File Name with switch /lfn. Switch /t for testing first (no '>')
 
@@ -73,3 +84,6 @@ Special Feature 2: with switch /lfn@ make Long File Names from stored LFN's as e
 
 ![FATMKDIR make LFN's to SFN directories from LFN's stored in #-files with switch -lfn@ and FATLSDIR -lfn -s shows them III](https://github.com/user-attachments/assets/2d68d9a1-16fa-4b22-a0de-8f8940b778b6)
 
+Example of making Long File Name directory containg grub4dos operators (if not forbidden chars)
+
+![FATMKDIR G4B making Long File Name containing grub4dos operators (with ls and ATTRIBFT G4B)](https://github.com/user-attachments/assets/1ab35a0e-49d8-4c19-86ba-04155806a29d)
